@@ -9,18 +9,24 @@ def print2d(arr):
 		print(*i,sep=' ')
 
 
-def MAX(arr, row_col=[] ,index=0,rows=[6,6,6,6,6,6,6]):
+def MAX(arr,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
+	stop=stop_condition(arr,row,col)
 	
-	if stop_condition(arr,row_col,rows): 
-		print2d(arr)
-		return
-	
-		
-
-	if index==49:
+	if stop==1: 
 		print2d(arr)
 		print()
+		return
+
+	if stop==-1:
+		print2d(arr)
+		print()
+		return
+	
+
+	if index==49:
+		#print2d(arr)
+		#print('ok')
 		return
 
 	#if stop==1 or stop==-1:
@@ -29,7 +35,7 @@ def MAX(arr, row_col=[] ,index=0,rows=[6,6,6,6,6,6,6]):
 
 	arr_send=[]
 	rows_send=[]
-	row_col_send=[]
+	
 
 	if index%2==0:
 		for j in range(7):
@@ -39,16 +45,9 @@ def MAX(arr, row_col=[] ,index=0,rows=[6,6,6,6,6,6,6]):
 			rows_copy=copy.deepcopy(rows)
 
 			arr_copy[rows_copy[j]][j]='x'
-			row_col_send.append(j)
 			rows_copy[j]-=1
-			arr_send.append(arr_copy)
-			rows_send.append(rows_copy)
+			MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
 			
-			
-		count=0
-		for arr in arr_send:
-			MAX(arr,row_col_send[count],index+1,rows_send[count])
-			count+=1
 
 				
 	else:
@@ -57,67 +56,141 @@ def MAX(arr, row_col=[] ,index=0,rows=[6,6,6,6,6,6,6]):
 				continue
 			arr_copy = copy.deepcopy(arr)
 			rows_copy=copy.deepcopy(rows)
-			arr_copy[rows_copy[j]][j]='o'
-			row_col_send.append(j)
-			rows_copy[j]-=1
-			arr_send.append(arr_copy)
-			rows_send.append(rows_copy)
-			
 
-		count=0
-		for arr in arr_send:
-			MAX(arr,row_col_send[count],index+1,rows_send[count])
-			count+=1
+			arr_copy[rows_copy[j]][j]='o'
+			rows_copy[j]-=1
+			MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
+			
+			
 				
 
 
 
 def stop_condition(arr,row,col):
+
 	count_o=0
 	count_x=0
-	
+	check_o=True
+	check_x=True
+
 	for i,j in zip(range(row,row+4),range(col,col+4)):
-		if i==7 or j==7:
+		if i>=7 or j>=7:
 			break
-		if arr[i][j]=='o':
-			count_o+=1
-		elif arr[i][j]=='x':
-			count_x+=1
-		else:
+		if i<=-1 or j<=-1:
+			break
+		if arr[i][j]=='-':
+			break
+		if arr[i][j]=='x' and check_x==False:
+			break
+		if arr[i][j]=='o' and check_o==False:
 			break
 
-	for i,j in zip(range(row,row-4,-1),range(col,col-4,-1)):
-		if i==7 or j==7:
-			break
-		if arr[i][j]=='o':
+		if arr[i][j]=='o' and check_o:
 			count_o+=1
-		elif arr[i][j]=='x':
-			count_x+=1
-		else:
-			break
-	
-	print(count_x,count_o)
-	print(row,col)
-	print()
+			check_x=False
 
-	if count_o==4: 
+		if arr[i][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+		
+
+	for i,j in zip(range(row-1,row-4,-1),range(col-1,col-4,-1)):
+		if i>=7 or j>=7:
+			break
+		if i<=-1 or j<=-1:
+			break
+		if arr[i][j]=='-':
+			break
+		if arr[i][j]=='x' and check_x==False:
+			break
+		if arr[i][j]=='o' and check_o==False:
+			break
+
+		if arr[i][j]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[i][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+
+
+
+	if count_o==4:
+		print(count_x,count_o)
+		print(row,col)
+		print()
 		return -1
 
 	if count_x==4: 
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return 1
+	
+	count_o=0
+	count_x=0
+	check_o=True
+	check_x=True
+
+	for i,j in zip(range(row,row-4,-1),range(col,col+4)):
+		if i>=7 or j>=7:
+			break
+		if i<=-1 or j<=-1:
+			break
+		if arr[i][j]=='-':
+			break
+		if arr[i][j]=='x' and check_x==False:
+			break
+		if arr[i][j]=='o' and check_o==False:
+			break
+		
+		if arr[i][j]=='o' and check_o:
+			count_o+=1
+			check_x=False
+		
+		if arr[i][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+		
+
+	for i,j in zip(range(row+1,row+4),range(col-1,col-4,-1)):
+		if i>=7 or j>=7:
+			break
+		if i<=-1 or j<=-1:
+			break
+		if arr[i][j]=='-':
+			break
+		if arr[i][j]=='x' and check_x==False:
+			break
+		if arr[i][j]=='o' and check_o==False:
+			break
+
+		if arr[i][j]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[i][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+
+
+	if count_o==4:
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return -1
+
+	if count_x==4: 
+		print(count_x,count_o)
+		print(row,col)
+		print()
 		return 1
 
-
-
-	
-	
 	
 
 
 
-
-	
-
-	
 	
 
 
