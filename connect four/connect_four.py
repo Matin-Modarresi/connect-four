@@ -1,7 +1,10 @@
 import copy
 game_board = [['-' for i in range(7)]for j in range(7)]
-
 game_board_copy=copy.deepcopy(game_board)
+
+count_o=0	
+count_x=0
+stop=0
 
 def print2d(arr):
 	for i in arr:
@@ -25,20 +28,16 @@ def MAX(arr, index=0,rows=[6,6,6,6,6,6,6]):
 			rows_copy=copy.deepcopy(rows)
 			arr_copy[rows_copy[j]][j]='x'
 			rows_copy[j]-=1
-			#print2d(arr_copy)
-			
-			#for r in rows_copy: print(f"{str(r):^5}",end='')
-			#print('\n')
 			arr_send.append(arr_copy)
 			rows_send.append(rows_copy)
-			#if rows[j]==-1: return
+			
 			
 		count=0
 		for arr in arr_send:
 			MAX(arr,index+1,rows_send[count])
 			count+=1
 
-			#MAX(arr_copy,index+1,rows_copy)	
+				
 	else:
 		for j in range(7):
 			if rows[j]==-1:
@@ -47,26 +46,56 @@ def MAX(arr, index=0,rows=[6,6,6,6,6,6,6]):
 			rows_copy=copy.deepcopy(rows)
 			arr_copy[rows_copy[j]][j]='o'
 			rows_copy[j]-=1
-			#print2d(arr_copy)
-			#for r in rows_copy: print(f"{str(r):^5}",end='')
-			#print('\n')
 			arr_send.append(arr_copy)
 			rows_send.append(rows_copy)
 			
-			#if rows[j]==-1: return
-        
+
 		count=0
 		for arr in arr_send:
 			MAX(arr,index+1,rows_send[count])
 			count+=1
-			#MAX(arr_copy,index+1,rows_copy)	
-		
+				
+
+count_o=0	
+count_x=0
+stop=0
+def stop_condition(arr,row,col):
+	
+	if row==7 or col==7:
+		return
+	if stop==-1 or stop==1:
+		return
+
+	if arr[row][col]=='o':
+		count_o+=1
+	elif arr[row][col]=='x':
+		count_x+=1
+	else:
+		return
+
+	if count_o==4:
+		stop = -1
+	if count_x==4:
+		stop = 1
+	
+
+	stop_condition(arr,row,col+1)
+	stop_condition(arr,row+1,col+1)
+	stop_condition(arr,row+1,col)
+	stop_condition(arr,row,col-1)
+	stop_condition(arr,row-1,col-1)
+	stop_condition(arr,row-1,col)
+	stop_condition(arr,row-1,col+1)
+	stop_condition(arr,row+1,col-1)
+
+
+	
 
 	
 	
 
 
-MAX(game_board_copy)
+#MAX(game_board_copy)
 
 #print2d(game_board)
 
