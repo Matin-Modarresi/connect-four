@@ -116,18 +116,18 @@ def stop_condition(arr,row,col):
 
 
 
-	if count_o==4:
+	if count_o>=4:
 		print(count_x,count_o)
 		print(row,col)
 		print()
 		return -1
 
-	if count_x==4: 
+	if count_x>=4: 
 		print(count_x,count_o)
 		print(row,col)
 		print()
 		return 1
-	
+####################################################
 	count_o=0
 	count_x=0
 	check_o=True
@@ -175,21 +175,149 @@ def stop_condition(arr,row,col):
 			check_o=False
 
 
-	if count_o==4:
+	if count_o>=4:
 		print(count_x,count_o)
 		print(row,col)
 		print()
 		return -1
 
-	if count_x==4: 
+	if count_x>=4: 
 		print(count_x,count_o)
 		print(row,col)
 		print()
 		return 1
 
-	
+###################################################	
+	count_o=0
+	count_x=0
+	check_o=True
+	check_x=True
+
+	for i in range(row,row+4):
+		if i>=7:
+			break
+		if i<=-1:
+			break
+
+		if arr[i][col]=='-':
+			break
+		if arr[i][col]=='x' and check_x==False:
+			break
+		if arr[i][col]=='o' and check_o==False:
+			break
+
+		if arr[i][col]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[i][col]=='x' and check_x:
+			count_x+=1
+			check_o=False
 
 
+
+
+	for i in range(row-1,row-4,-1):
+		if i>=7:
+			break
+		if i<=-1:
+			break
+
+		if arr[i][col]=='-':
+			break
+		if arr[i][col]=='x' and check_x==False:
+			break
+		if arr[i][col]=='o' and check_o==False:
+			break
+
+		if arr[i][col]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[i][col]=='x' and check_x:
+			count_x+=1
+			check_o=False
+
+	if count_o>=4:
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return -1
+
+	if count_x>=4: 
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return 1
+
+
+##################################################
+	count_o=0
+	count_x=0
+	check_o=True
+	check_x=True
+
+	for j in range(col,col+4):
+		if j>=7:
+			break
+		if j<=-1:
+			break
+
+		if arr[row][j]=='-':
+			break
+		if arr[row][j]=='x' and check_x==False:
+			break
+		if arr[row][j]=='o' and check_o==False:
+			break
+
+		if arr[row][j]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[row][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+
+
+
+	for j in range(col-1,col-4,-1):
+		if j>=7:
+			break
+		if j<=-1:
+			break
+
+		if arr[row][j]=='-':
+			break
+		if arr[row][j]=='x' and check_x==False:
+			break
+		if arr[row][j]=='o' and check_o==False:
+			break
+
+		if arr[row][j]=='o' and check_o:
+			count_o+=1
+			check_x=False
+
+		if arr[row][j]=='x' and check_x:
+			count_x+=1
+			check_o=False
+
+	if count_o>=4:
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return -1
+
+	if count_x>=4: 
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return 1
+
+	"""if row==4 and col==5:
+		print(count_x,count_o)
+		print(row,col)
+		print()
+		return 1"""
 
 	
 
