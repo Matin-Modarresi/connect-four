@@ -3,6 +3,7 @@ game_board = [['-' for i in range(7)]for j in range(7)]
 game_board_copy=copy.deepcopy(game_board)
 
 stop=0
+char=''
 
 def print2d(arr):
 	for i in arr:
@@ -16,15 +17,17 @@ def MAX(arr,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	if stop==1: 
 		print2d(arr)
 		print()
-		return
+		input(char)
+		return 1
 
 	if stop==-1:
 		print2d(arr)
 		print()
-		return
+		input(char)
+		return -1
 	
 
-	if index==49:
+	if index==8:
 		#print2d(arr)
 		#print('ok')
 		return
@@ -36,33 +39,24 @@ def MAX(arr,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	arr_send=[]
 	rows_send=[]
 	
+	for j in range(7):
+		if rows[j]==-1:
+			continue
+		arr_copy = copy.deepcopy(arr)
+		rows_copy=copy.deepcopy(rows)
 
-	if index%2==0:
-		for j in range(7):
-			if rows[j]==-1:
-				continue
-			arr_copy = copy.deepcopy(arr)
-			rows_copy=copy.deepcopy(rows)
-
+		if index%2==0:
 			arr_copy[rows_copy[j]][j]='x'
-			rows_copy[j]-=1
-			MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
-			
-
-				
-	else:
-		for j in range(7):
-			if rows[j]==-1:
-				continue
-			arr_copy = copy.deepcopy(arr)
-			rows_copy=copy.deepcopy(rows)
-
+		else:
 			arr_copy[rows_copy[j]][j]='o'
-			rows_copy[j]-=1
-			MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
-			
-			
-				
+
+		rows_copy[j]-=1
+		ignore=MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
+		if ignore==1 or ignore==-1:
+			break;
+	
+
+						
 
 
 
@@ -85,8 +79,6 @@ def stop_condition(arr,row,col):
 		if(not condition):
 			break
 
-
-
 	if count_o>=4:
 		print(count_x,count_o)
 		print(row,col)
@@ -98,6 +90,7 @@ def stop_condition(arr,row,col):
 		print(row,col)
 		print()
 		return 1
+
 ####################################################
 	count_o=0
 	count_x=0
@@ -114,7 +107,6 @@ def stop_condition(arr,row,col):
 		condition,count_x,count_o,check_x,check_o = conditions(arr,i,j,count_x,count_o,check_x,check_o)
 		if(not condition):
 			break
-
 
 	if count_o>=4:
 		print(count_x,count_o)
@@ -156,7 +148,6 @@ def stop_condition(arr,row,col):
 		print(row,col)
 		print()
 		return 1
-
 
 ##################################################
 	count_o=0
