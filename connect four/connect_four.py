@@ -9,28 +9,55 @@ def print2d(arr):
 	for i in arr:
 		print(*i,sep=' ')
 
+class Node:
+	def __init__(self,data):
 
-def MAX(arr,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
+		self.leaves=[]
+		self.data=data
+
+	def insert(self,data):
+		if self.data:
+			self.leaves.append(Node(data))
+		else:
+			self.data=data
+
+	def printTree(self):
+		for i in self.leaves:
+			if i.data:
+				print2d(i.data)
+				print()
+				i.printTree()
+			
+
+
+
+def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
 	stop=stop_condition(arr,row,col)
 	
+	#for i in self.leaves:
+	#	print2d(i.data)
+	#	print()
+	#print()
+	#input(char)
+	
 	if stop==1: 
-		print2d(arr)
-		print()
-		input(char)
+		#print2d(arr)
+		#print()
+		#input(char)
 		return 1
 
 	if stop==-1:
-		print2d(arr)
-		print()
-		input(char)
+		#print2d(arr)
+		#print()
+		#input(char)
 		return -1
 	
 
-	if index==8:
+	if index==3:
 		#print2d(arr)
 		#print('ok')
-		return
+		return 0
 
 	#if stop==1 or stop==-1:
 	#	stop=0
@@ -51,7 +78,9 @@ def MAX(arr,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 			arr_copy[rows_copy[j]][j]='o'
 
 		rows_copy[j]-=1
-		ignore=MAX(arr_copy,index+1,rows_copy,rows_copy[j]+1,j)
+		self.leaves.append(Node(arr_copy))
+		ignore=MAX(arr_copy,self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
+		
 		if ignore==1 or ignore==-1:
 			break;
 	
@@ -80,15 +109,15 @@ def stop_condition(arr,row,col):
 			break
 
 	if count_o>=4:
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return -1
 
 	if count_x>=4: 
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return 1
 
 ####################################################
@@ -109,15 +138,15 @@ def stop_condition(arr,row,col):
 			break
 
 	if count_o>=4:
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return -1
 
 	if count_x>=4: 
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return 1
 
 ###################################################	
@@ -138,15 +167,15 @@ def stop_condition(arr,row,col):
 			break
 
 	if count_o>=4:
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return -1
 
 	if count_x>=4: 
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return 1
 
 ##################################################
@@ -168,15 +197,15 @@ def stop_condition(arr,row,col):
 			break
 
 	if count_o>=4:
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return -1
 
 	if count_x>=4: 
-		print(count_x,count_o)
-		print(row,col)
-		print()
+		#print(count_x,count_o)
+		#print(row,col)
+		#print()
 		return 1
 
 
@@ -209,7 +238,10 @@ def conditions(arr,row,col,count_x, count_o,check_x,check_o):
 
 	return True,count_x,count_o,check_x,check_o
 
-MAX(game_board_copy)
+
+tree=Node(game_board_copy)
+MAX(game_board_copy,tree)
+tree.printTree()
 
 
 
