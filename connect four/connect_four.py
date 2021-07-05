@@ -10,10 +10,11 @@ def print2d(arr):
 		print(*i,sep=' ')
 
 class Node:
-	def __init__(self,data):
+	def __init__(self,data,value):
 
 		self.leaves=[]
 		self.data=data
+		self.value=value
 
 	def insert(self,data):
 		if self.data:
@@ -24,37 +25,38 @@ class Node:
 	def printTree(self):
 		for i in self.leaves:
 			if i.data:
+				print(i.value)
 				print2d(i.data)
 				print()
 				i.printTree()
 			
 
 
+	
 
 def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
-	stop=stop_condition(arr,row,col)
+	value=stop_condition(arr,row,col)
 	
-	#for i in self.leaves:
-	#	print2d(i.data)
-	#	print()
+	self.leaves.append(Node(arr,value))
+	#print(value)
+	#print2d(arr)
 	#print()
-	#input(char)
-	
-	if stop==1: 
-		#print2d(arr)
-		#print()
-		#input(char)
+		
+	if value==100: 
+		print2d(arr)
+		print()
+		input(char)
 		return 1
 
-	if stop==-1:
-		#print2d(arr)
-		#print()
-		#input(char)
+	if value==-100:
+		print2d(arr)
+		print()
+		input(char)
 		return -1
 	
 
-	if index==3:
+	if index==5:
 		#print2d(arr)
 		#print('ok')
 		return 0
@@ -78,7 +80,7 @@ def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 			arr_copy[rows_copy[j]][j]='o'
 
 		rows_copy[j]-=1
-		self.leaves.append(Node(arr_copy))
+		
 		ignore=MAX(arr_copy,self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
 		
 		if ignore==1 or ignore==-1:
@@ -91,6 +93,7 @@ def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 
 def stop_condition(arr,row,col):
 
+	value=0
 	count_o=0
 	count_x=0
 	check_o=True
@@ -108,17 +111,13 @@ def stop_condition(arr,row,col):
 		if(not condition):
 			break
 
-	if count_o>=4:
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return -1
+	if count_o<=-4:
+		return -100
+	else: value+=count_o
 
 	if count_x>=4: 
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return 1
+		return 100
+	else: value+=count_x
 
 ####################################################
 	count_o=0
@@ -137,17 +136,13 @@ def stop_condition(arr,row,col):
 		if(not condition):
 			break
 
-	if count_o>=4:
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return -1
+	if count_o<=-4:
+		return -100
+	else: value+=count_o
 
 	if count_x>=4: 
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return 1
+		return 100
+	else: value+=count_x
 
 ###################################################	
 	count_o=0
@@ -166,17 +161,13 @@ def stop_condition(arr,row,col):
 		if(not condition):
 			break
 
-	if count_o>=4:
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return -1
+	if count_o<=-4:
+		return -100
+	else: value+=count_o
 
 	if count_x>=4: 
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return 1
+		return 100
+	else: value+=count_x
 
 ##################################################
 	count_o=0
@@ -196,23 +187,52 @@ def stop_condition(arr,row,col):
 		if(not condition):
 			break
 
-	if count_o>=4:
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return -1
+	if count_o<=-4:
+		return -100
+	else: value+=count_o
 
 	if count_x>=4: 
-		#print(count_x,count_o)
-		#print(row,col)
-		#print()
-		return 1
+		return 100
+	else: value+=count_x
+
+	if value>0:
+		return value-3
+	elif value<0: 
+		return value+3
+	else:
+		return 0
+
 
 
 
 	
 def conditions(arr,row,col,count_x, count_o,check_x,check_o):
 	
+	if row>=7 or col>=7 or row<=-1 or col<=-1:
+		return False,count_x,count_o,check_x,check_o
+
+
+	if arr[row][col]=='-':
+		return False,count_x,count_o,check_x,check_o
+
+	if arr[row][col]=='x' and check_x==False:
+		return False,count_x,count_o,check_x,check_o
+
+	if arr[row][col]=='o' and check_o==False:
+		return False,count_x,count_o,check_x,check_o
+
+	if arr[row][col]=='o' and check_o:
+		count_o-=1
+		check_x=False
+
+	if arr[row][col]=='x' and check_x:
+		count_x+=1
+		check_o=False
+
+	return True,count_x,count_o,check_x,check_o
+
+
+def calc_value(arr,row, col,value):
 	if row>=7 or col>=7:
 		return False,count_x,count_o,check_x,check_o
 
@@ -229,7 +249,7 @@ def conditions(arr,row,col,count_x, count_o,check_x,check_o):
 		return False,count_x,count_o,check_x,check_o
 
 	if arr[row][col]=='o' and check_o:
-		count_o+=1
+		count_o-=1
 		check_x=False
 
 	if arr[row][col]=='x' and check_x:
@@ -238,8 +258,7 @@ def conditions(arr,row,col,count_x, count_o,check_x,check_o):
 
 	return True,count_x,count_o,check_x,check_o
 
-
-tree=Node(game_board_copy)
+tree=Node(game_board_copy,0)
 MAX(game_board_copy,tree)
 tree.printTree()
 
