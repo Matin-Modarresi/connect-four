@@ -10,11 +10,10 @@ def print2d(arr):
 		print(*i,sep=' ')
 
 class Node:
-	def __init__(self,data,value):
+	def __init__(self,data):
 
 		self.leaves=[]
 		self.data=data
-		self.value=value
 
 	def insert(self,data):
 		if self.data:
@@ -25,45 +24,36 @@ class Node:
 	def printTree(self):
 		for i in self.leaves:
 			if i.data:
-				print(i.value)
 				print2d(i.data)
 				print()
 				i.printTree()
 			
 
 
-	
 
 def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
-	value=stop_condition(arr,row,col)
+	stop=stop_condition(arr,row,col)
 	
-	self.leaves.append(Node(arr,value))
-	#print(value)
-	#print2d(arr)
-	#print()
-		
-	if value==100: 
+	
+	if stop==1: 
 		print2d(arr)
 		print()
 		input(char)
 		return 1
 
-	if value==-100:
+	if stop==-1:
 		print2d(arr)
 		print()
 		input(char)
 		return -1
 	
 
-	if index==5:
-		#print2d(arr)
-		#print('ok')
+	if index==49:
+		print2d(arr)
+		print()
 		return 0
 
-	#if stop==1 or stop==-1:
-	#	stop=0
-	#	return
 
 	arr_send=[]
 	rows_send=[]
@@ -80,7 +70,7 @@ def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 			arr_copy[rows_copy[j]][j]='o'
 
 		rows_copy[j]-=1
-		
+		self.leaves.append(Node(arr_copy))
 		ignore=MAX(arr_copy,self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
 		
 		if ignore==1 or ignore==-1:
@@ -93,174 +83,135 @@ def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 
 def stop_condition(arr,row,col):
 
-	value=0
-	count_o=0
-	count_x=0
-	check_o=True
-	check_x=True
+	count = 0
+	check =None
 
 	for i,j in zip(range(row,row+4),range(col,col+4)):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,i,j,count_x,count_o,check_x,check_o)
+		condition,count,check = conditions(arr,i,j,count,check)
 		if(not condition):
 			break
 			
 		
 
 	for i,j in zip(range(row-1,row-4,-1),range(col-1,col-4,-1)):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,i,j,count_x,count_o,check_x,check_o)
+		condition,count,check = conditions(arr,i,j,count,check)
 		if(not condition):
 			break
 
-	if count_o<=-4:
-		return -100
-	else: value+=count_o
-
-	if count_x>=4: 
-		return 100
-	else: value+=count_x
+	if count>=4:
+		print(count)
+		print(row,col)
+		if check=='x':
+			return 1
+		else:
+			return -1
 
 ####################################################
-	count_o=0
-	count_x=0
-	check_o=True
-	check_x=True
+	count=0
+	check=None
 
 	for i,j in zip(range(row,row-4,-1),range(col,col+4)):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,i,j,count_x,count_o,check_x,check_o)
+		condition,count,check = conditions(arr,i,j,count,check)
 		if(not condition):
 			break
 		
 
 	for i,j in zip(range(row+1,row+4),range(col-1,col-4,-1)):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,i,j,count_x,count_o,check_x,check_o)
+		condition,count,check= conditions(arr,i,j,count,check)
 		if(not condition):
 			break
 
-	if count_o<=-4:
-		return -100
-	else: value+=count_o
-
-	if count_x>=4: 
-		return 100
-	else: value+=count_x
+	if count>=4:
+		print(count)
+		print(row,col)
+		if check=='x':
+			return 1
+		else:
+			return -1
 
 ###################################################	
-	count_o=0
-	count_x=0
-	check_o=True
-	check_x=True
+	count=0
+	check=None
 
 	for i in range(row,row+4):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,i,col,count_x,count_o,check_x,check_o)
+		condition,coutn,check= conditions(arr,i,col,count,check)
 		if(not condition):
 			break
 
 
 	for i in range(row-1,row-4,-1):
-		conditon,count_x,count_o,check_x,check_o = conditions(arr,i,col,count_x,count_o,check_x,check_o)
+		conditon,count,check = conditions(arr,i,col,count,check)
 		if(not condition):
 			break
 
-	if count_o<=-4:
-		return -100
-	else: value+=count_o
-
-	if count_x>=4: 
-		return 100
-	else: value+=count_x
+	if count>=4:
+		print(count)
+		print(row,col)
+		if check=='x':
+			return 1
+		else:
+			return -1
 
 ##################################################
-	count_o=0
-	count_x=0
-	check_o=True
-	check_x=True
+	count=0
+	check=None
 
 	for j in range(col,col+4):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,row,j,count_x,count_o,check_x,check_o)
+		condition,count,check = conditions(arr,row,j,count,check)
 		if(not condition):
 			break
 
 
 
 	for j in range(col-1,col-4,-1):
-		condition,count_x,count_o,check_x,check_o = conditions(arr,row,j,count_x,count_o,check_x,check_o)
+		condition,count,check = conditions(arr,row,j,count,check)
 		if(not condition):
 			break
 
-	if count_o<=-4:
-		return -100
-	else: value+=count_o
-
-	if count_x>=4: 
-		return 100
-	else: value+=count_x
-
-	if value>0:
-		return value-3
-	elif value<0: 
-		return value+3
-	else:
-		return 0
-
+	if count>=4:
+		print(count)
+		print(row,col)
+		if check=='x':
+			return 1
+		else:
+			return -1
 
 
 
 	
-def conditions(arr,row,col,count_x, count_o,check_x,check_o):
+def conditions(arr,row,col,count,check):
 	
-	if row>=7 or col>=7 or row<=-1 or col<=-1:
-		return False,count_x,count_o,check_x,check_o
-
-
-	if arr[row][col]=='-':
-		return False,count_x,count_o,check_x,check_o
-
-	if arr[row][col]=='x' and check_x==False:
-		return False,count_x,count_o,check_x,check_o
-
-	if arr[row][col]=='o' and check_o==False:
-		return False,count_x,count_o,check_x,check_o
-
-	if arr[row][col]=='o' and check_o:
-		count_o-=1
-		check_x=False
-
-	if arr[row][col]=='x' and check_x:
-		count_x+=1
-		check_o=False
-
-	return True,count_x,count_o,check_x,check_o
-
-
-def calc_value(arr,row, col,value):
 	if row>=7 or col>=7:
-		return False,count_x,count_o,check_x,check_o
+		return False,count,check
 
 	if row<=-1 or col<=-1:
-		return False,count_x,count_o,check_x,check_o
+		return False,count,check
 
 	if arr[row][col]=='-':
-		return False,count_x,count_o,check_x,check_o
+		return False,count,check
 
-	if arr[row][col]=='x' and check_x==False:
-		return False,count_x,count_o,check_x,check_o
+	if arr[row][col]=='x':
 
-	if arr[row][col]=='o' and check_o==False:
-		return False,count_x,count_o,check_x,check_o
+		if check== None or check=='x':
+		   count+=1
+		   check='x'
+		else:
+			return False,count,check
 
-	if arr[row][col]=='o' and check_o:
-		count_o-=1
-		check_x=False
+	if arr[row][col]=='o':
 
-	if arr[row][col]=='x' and check_x:
-		count_x+=1
-		check_o=False
+		if check==None or check=='o':
+			count+=1
+			check='o'
+		else:
+			return False,count,check
 
-	return True,count_x,count_o,check_x,check_o
+	return True,count,check
 
-tree=Node(game_board_copy,0)
+
+tree=Node(game_board_copy)
 MAX(game_board_copy,tree)
-tree.printTree()
+#tree.printTree()
 
 
 
