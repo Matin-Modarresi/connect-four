@@ -10,68 +10,76 @@ def print2d(arr):
 		print(*i,sep=' ')
 
 class Node:
-	def __init__(self,data):
+	def __init__(self,map):
 
 		self.leaves=[]
-		self.data=data
+		self.value=0
+		self.map=map
+		self.row=0
+		self.col=0
 
-	def insert(self,data):
-		if self.data:
-			self.leaves.append(Node(data))
+	def insert(self,map):
+		if self.map:
+			self.leaves.append(Node(map))
 		else:
-			self.data=data
+			self.map=map
 
 	def printTree(self):
 		for i in self.leaves:
-			if i.data:
-				print2d(i.data)
+			if i.map:
+				print(i.row,i.col)
+				print2d(i.map)
 				print()
 				i.printTree()
 			
 
 
 
-def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
+def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
-	stop=stop_condition(arr,row,col)
-	
+	stop=stop_condition(self,row,col)
+
+	self.row=row
+	self.col=col
 	
 	if stop==1: 
-		print2d(arr)
-		print()
-		input(char)
+		#print2d(arr)
+		#print()
+		#input(char)
 		return 1
 
 	if stop==-1:
-		print2d(arr)
-		print()
-		input(char)
+		#print2d(arr)
+		#print()
+		#input(char)
 		return -1
 	
 
-	if index==49:
-		print2d(arr)
-		print()
+	if index==5:
+		#print2d(arr)
+		#print()
 		return 0
 
 
-	arr_send=[]
+	map_copy=[]
 	rows_send=[]
+
 	
 	for j in range(7):
 		if rows[j]==-1:
 			continue
-		arr_copy = copy.deepcopy(arr)
+
+		map_copy = copy.deepcopy(self.map)
 		rows_copy=copy.deepcopy(rows)
 
 		if index%2==0:
-			arr_copy[rows_copy[j]][j]='x'
+			map_copy[rows_copy[j]][j]='x'
 		else:
-			arr_copy[rows_copy[j]][j]='o'
+			map_copy[rows_copy[j]][j]='o'
 
 		rows_copy[j]-=1
-		self.leaves.append(Node(arr_copy))
-		ignore=MAX(arr_copy,self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
+		self.leaves.append(Node(map_copy))
+		ignore=MAX(self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
 		
 		if ignore==1 or ignore==-1:
 			break;
@@ -81,26 +89,24 @@ def MAX(arr,self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 
 
 
-def stop_condition(arr,row,col):
+def stop_condition(self,row,col):
 
 	count = 0
-	check =None
+	check = None
 
 	for i,j in zip(range(row,row+4),range(col,col+4)):
-		condition,count,check = conditions(arr,i,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 			
 		
 
 	for i,j in zip(range(row-1,row-4,-1),range(col-1,col-4,-1)):
-		condition,count,check = conditions(arr,i,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 	if count>=4:
-		print(count)
-		print(row,col)
 		if check=='x':
 			return 1
 		else:
@@ -111,19 +117,17 @@ def stop_condition(arr,row,col):
 	check=None
 
 	for i,j in zip(range(row,row-4,-1),range(col,col+4)):
-		condition,count,check = conditions(arr,i,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 		
 
 	for i,j in zip(range(row+1,row+4),range(col-1,col-4,-1)):
-		condition,count,check= conditions(arr,i,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 	if count>=4:
-		print(count)
-		print(row,col)
 		if check=='x':
 			return 1
 		else:
@@ -134,19 +138,17 @@ def stop_condition(arr,row,col):
 	check=None
 
 	for i in range(row,row+4):
-		condition,coutn,check= conditions(arr,i,col,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 
 	for i in range(row-1,row-4,-1):
-		conditon,count,check = conditions(arr,i,col,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 	if count>=4:
-		print(count)
-		print(row,col)
 		if check=='x':
 			return 1
 		else:
@@ -157,20 +159,18 @@ def stop_condition(arr,row,col):
 	check=None
 
 	for j in range(col,col+4):
-		condition,count,check = conditions(arr,row,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 
 
 	for j in range(col-1,col-4,-1):
-		condition,count,check = conditions(arr,row,j,count,check)
+		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
 
 	if count>=4:
-		print(count)
-		print(row,col)
 		if check=='x':
 			return 1
 		else:
@@ -210,8 +210,8 @@ def conditions(arr,row,col,count,check):
 
 
 tree=Node(game_board_copy)
-MAX(game_board_copy,tree)
-#tree.printTree()
+MAX(tree)
+tree.printTree()
 
 
 
