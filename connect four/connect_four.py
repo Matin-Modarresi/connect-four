@@ -37,25 +37,31 @@ class Node:
 
 def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
-	stop=stop_condition(self,row,col)
+	stop,count = stop_condition(self,row,col)
 
 	self.row=row
 	self.col=col
 	
+	print(self.row,self.col)
+	#print(count)
+	print2d(self.map)
+	print()
+	input(char)
+
 	if stop==1: 
-		#print2d(arr)
+		#print2d(self.map)
 		#print()
 		#input(char)
 		return 1
 
 	if stop==-1:
-		#print2d(arr)
+		#print2d(self.map)
 		#print()
 		#input(char)
 		return -1
 	
 
-	if index==5:
+	if index==49:
 		#print2d(arr)
 		#print()
 		return 0
@@ -106,11 +112,12 @@ def stop_condition(self,row,col):
 		if(not condition):
 			break
 
+	print("orib-pain",count)
 	if count>=4:
 		if check=='x':
-			return 1
+			return 1,count
 		else:
-			return -1
+			return -1,count
 
 ####################################################
 	count=0
@@ -126,60 +133,64 @@ def stop_condition(self,row,col):
 		condition,count,check = conditions(self.map,i,j,count,check)
 		if(not condition):
 			break
-
+	print("orib bala",count)
 	if count>=4:
 		if check=='x':
-			return 1
+			return 1,count
 		else:
-			return -1
+			return -1,count
 
 ###################################################	
 	count=0
 	check=None
 
 	for i in range(row,row+4):
-		condition,count,check = conditions(self.map,i,j,count,check)
+		condition,count,check = conditions(self.map,i,col,count,check)
 		if(not condition):
 			break
 
 
 	for i in range(row-1,row-4,-1):
-		condition,count,check = conditions(self.map,i,j,count,check)
+		condition,count,check = conditions(self.map,i,col,count,check)
 		if(not condition):
 			break
-
+	print("amoodi",count)
 	if count>=4:
 		if check=='x':
-			return 1
+			return 1,count
 		else:
-			return -1
+			return -1,count
 
 ##################################################
 	count=0
 	check=None
 
 	for j in range(col,col+4):
-		condition,count,check = conditions(self.map,i,j,count,check)
+		condition,count,check = conditions(self.map,row,j,count,check)
 		if(not condition):
 			break
 
 
 
 	for j in range(col-1,col-4,-1):
-		condition,count,check = conditions(self.map,i,j,count,check)
+		condition,count,check = conditions(self.map,row,j,count,check)
 		if(not condition):
 			break
-
+	print("ofoghi",count)
 	if count>=4:
 		if check=='x':
-			return 1
+			return 1,count
 		else:
-			return -1
+			return -1,count
+
+	return 0,count
 
 
 
 	
 def conditions(arr,row,col,count,check):
+
+	
 	
 	if row>=7 or col>=7:
 		return False,count,check
@@ -192,10 +203,12 @@ def conditions(arr,row,col,count,check):
 
 	if arr[row][col]=='x':
 
-		if check== None or check=='x':
+		if check==None or check=='x':
 		   count+=1
 		   check='x'
-		else:
+
+
+		if check=='o':
 			return False,count,check
 
 	if arr[row][col]=='o':
@@ -203,7 +216,9 @@ def conditions(arr,row,col,count,check):
 		if check==None or check=='o':
 			count+=1
 			check='o'
-		else:
+
+
+		if check=='x':
 			return False,count,check
 
 	return True,count,check
@@ -211,7 +226,7 @@ def conditions(arr,row,col,count,check):
 
 tree=Node(game_board_copy)
 MAX(tree)
-tree.printTree()
+#tree.printTree()
 
 
 
