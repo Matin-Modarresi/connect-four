@@ -37,7 +37,7 @@ class Node:
 
 def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	
-	stop,count = stop_condition(self,row,col)
+	stop = stop_condition(self,row,col)
 
 	self.row=row
 	self.col=col
@@ -97,93 +97,57 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 
 def stop_condition(self,row,col):
 
-	count = 0
-	check = None
+	range_  = [
+			   [ [(row,row+4),(col,col+4)]      ,[(row-1,row-4,-1),(col-1,col-4,-1)] ],
+			   [ [(row,row-4,-1),(col,col+4)]   ,[( row+1,row+4),(col-1,col-4,-1)]   ],
+			   [ [(row,row+4),col]				,[(row-1,row-4,-1),col]				 ],
+			   [ [row,(col,col+4)]				,[row,(col-1,col-4,-1)]				 ]
+			  ]
 
-	for i,j in zip(range(row,row+4),range(col,col+4)):
-		condition,count,check = conditions(self.map,i,j,count,check)
-		if(not condition):
-			break
+
+	for i in range_:
+		count = 0
+		check = None
+		for j in i:
+			if i==range_[0] or i==range_[1]:
+				for n,m in zip(range(*j[0]),range(*j[1])):
+					condition,count,check = conditions(self.map,n,m,count,check)
+					if not condition:
+						break
 			
+			if i==range_[2]:
+				for n in range(*j[0]):
+					condition,count,check = conditions(self.map,n,j[1],count,check)
+					if not condition:
+						break
+
+
+			if i==range_[3]:
+				for m in range(*j[1]):
+					condition,count,check = conditions(self.map,j[0],m,count,check)
+					if not condition:
+						break
+
 		
-
-	for i,j in zip(range(row-1,row-4,-1),range(col-1,col-4,-1)):
-		condition,count,check = conditions(self.map,i,j,count,check)
-		if(not condition):
-			break
-
-	print("orib-pain",count)
-	if count>=4:
-		if check=='x':
-			return 1,count
+		if i==range_[0]:
+			print("nozoli: " ,count)
+		elif i==range_[1]:
+			print("soudi:  ",count)
+		elif i==range_[2]:
+			print("amoodi: ",count)
 		else:
-			return -1,count
+			print("ofoghi: ",count)
+				
 
-####################################################
-	count=0
-	check=None
+		if count>=4:
+			if check=='x':
+				return 1
+			else:
+				return -1
+			
 
-	for i,j in zip(range(row,row-4,-1),range(col,col+4)):
-		condition,count,check = conditions(self.map,i,j,count,check)
-		if(not condition):
-			break
-		
+	return 0
 
-	for i,j in zip(range(row+1,row+4),range(col-1,col-4,-1)):
-		condition,count,check = conditions(self.map,i,j,count,check)
-		if(not condition):
-			break
-	print("orib bala",count)
-	if count>=4:
-		if check=='x':
-			return 1,count
-		else:
-			return -1,count
-
-###################################################	
-	count=0
-	check=None
-
-	for i in range(row,row+4):
-		condition,count,check = conditions(self.map,i,col,count,check)
-		if(not condition):
-			break
-
-
-	for i in range(row-1,row-4,-1):
-		condition,count,check = conditions(self.map,i,col,count,check)
-		if(not condition):
-			break
-	print("amoodi",count)
-	if count>=4:
-		if check=='x':
-			return 1,count
-		else:
-			return -1,count
-
-##################################################
-	count=0
-	check=None
-
-	for j in range(col,col+4):
-		condition,count,check = conditions(self.map,row,j,count,check)
-		if(not condition):
-			break
-
-
-
-	for j in range(col-1,col-4,-1):
-		condition,count,check = conditions(self.map,row,j,count,check)
-		if(not condition):
-			break
-	print("ofoghi",count)
-	if count>=4:
-		if check=='x':
-			return 1,count
-		else:
-			return -1,count
-
-	return 0,count
 
 
 
