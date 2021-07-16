@@ -17,6 +17,10 @@ class Node:
 		self.map=map
 		self.row=0
 		self.col=0
+		self.nozoli=0
+		self.soudi=0
+		self.ofoghi=0
+		self.amoodi=0
 
 	def insert(self,map):
 		if self.map:
@@ -42,6 +46,7 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	self.row=row
 	self.col=col
 	
+	print(self.value)
 	print(self.row,self.col)
 	#print(count)
 	print2d(self.map)
@@ -49,6 +54,9 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	input(char)
 
 	if stop==1: 
+		#print(self.value)
+		#print(self.row,self.col)
+		##print(count)
 		#print2d(self.map)
 		#print()
 		#input(char)
@@ -61,7 +69,7 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		return -1
 	
 
-	if index==49:
+	if index==5:
 		#print2d(arr)
 		#print()
 		return 0
@@ -97,6 +105,7 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 
 def stop_condition(self,row,col):
 
+	value=0
 	range_  = [
 			   [ [(row,row+4),(col,col+4)]      ,[(row-1,row-4,-1),(col-1,col-4,-1)] ],
 			   [ [(row,row-4,-1),(col,col+4)]   ,[( row+1,row+4),(col-1,col-4,-1)]   ],
@@ -108,84 +117,113 @@ def stop_condition(self,row,col):
 	for i in range_:
 		count = 0
 		check = None
+		self.value=0
+		
+
 		for j in i:
+			check_=False
 			if i==range_[0] or i==range_[1]:
 				for n,m in zip(range(*j[0]),range(*j[1])):
-					condition,count,check = conditions(self.map,n,m,count,check)
+					condition,count,check,check_ = conditions(self,n,m,count,check,check_)
+
+					if i==range_[0]:
+						self.nozoli=self.value
+					else:
+						self.soudi=self.value
+
 					if not condition:
 						break
 			
 			if i==range_[2]:
 				for n in range(*j[0]):
-					condition,count,check = conditions(self.map,n,j[1],count,check)
+					condition,count,check,check_ = conditions(self,n,j[1],count,check,check_)
+					self.ofoghi=self.value
+
 					if not condition:
 						break
 
 
 			if i==range_[3]:
 				for m in range(*j[1]):
-					condition,count,check = conditions(self.map,j[0],m,count,check)
+					condition,count,check,check_ = conditions(self,j[0],m,count,check,check_)
+					self.amoodi=self.value
+
 					if not condition:
 						break
 
 		
 		if i==range_[0]:
-			print("nozoli: " ,count)
+			print("nozoli: " ,count,self.value)
+			value+=self.value
 		elif i==range_[1]:
-			print("soudi:  ",count)
+			print("soudi:  ",count,self.value)
+			value+=self.value
 		elif i==range_[2]:
-			print("amoodi: ",count)
+			print("amoodi: ",count,self.value)
+			value+=self.value
 		else:
-			print("ofoghi: ",count)
-				
+			print("ofoghi: ",count,self.value)
+			value+=self.value	
 
 		if count>=4:
+			self.value+=100
 			if check=='x':
 				return 1
 			else:
 				return -1
-			
 
+	self.value=value
 	return 0
 
 
 
 
 	
-def conditions(arr,row,col,count,check):
+def conditions(self,row,col,count,check,check_):
 
 	
 	
-	if row>=7 or col>=7:
-		return False,count,check
+	if row>=7 or col>=7 or row<=-1 or col<=-1:
+		return False,count,check,check_
 
-	if row<=-1 or col<=-1:
-		return False,count,check
 
-	if arr[row][col]=='-':
-		return False,count,check
+	if self.map[row][col]=='-':
+		if not check_:
+				check_=True
+				self.value += count+.5
+		else: self.value+=.5
 
-	if arr[row][col]=='x':
+
+	if self.map[row][col]=='x':
+
+		#if check=='x' and check_:
+
 
 		if check==None or check=='x':
-		   count+=1
-		   check='x'
+			if check_:
+				self.value+=1
+			else:
+				count+=1
+				check='x'
 
 
 		if check=='o':
-			return False,count,check
+			return False,count,check,check_
 
-	if arr[row][col]=='o':
+	if self.map[row][col]=='o':
 
 		if check==None or check=='o':
-			count+=1
-			check='o'
+			if check_:
+				self.value+=1
+			else:
+				count+=1
+				check='o'
 
 
 		if check=='x':
-			return False,count,check
+			return False,count,check,check_
 
-	return True,count,check
+	return True,count,check,check_
 
 
 tree=Node(game_board_copy)
