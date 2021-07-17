@@ -46,7 +46,12 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	self.row=row
 	self.col=col
 	
+	print("nozoli:",self.nozoli)
+	print("soudi: ",self.soudi)
+	print("amoodi:",self.amoodi)
+	print("ofoghi:",self.ofoghi)
 	print(self.value)
+
 	print(self.row,self.col)
 	#print(count)
 	print2d(self.map)
@@ -125,45 +130,42 @@ def stop_condition(self,row,col):
 			if i==range_[0] or i==range_[1]:
 				for n,m in zip(range(*j[0]),range(*j[1])):
 					condition,count,check,check_ = conditions(self,n,m,count,check,check_)
-
-					if i==range_[0]:
-						self.nozoli=self.value
-					else:
-						self.soudi=self.value
-
 					if not condition:
 						break
+
+				if i==range_[0]:
+					self.nozoli=self.value
+
+					
+				else:
+					self.soudi=self.value
+			
+					
+
 			
 			if i==range_[2]:
 				for n in range(*j[0]):
 					condition,count,check,check_ = conditions(self,n,j[1],count,check,check_)
-					self.ofoghi=self.value
-
 					if not condition:
 						break
+
+				self.amoodi=self.value
+	
+				
 
 
 			if i==range_[3]:
 				for m in range(*j[1]):
 					condition,count,check,check_ = conditions(self,j[0],m,count,check,check_)
-					self.amoodi=self.value
-
 					if not condition:
 						break
 
+				self.ofoghi=self.value
+				
+				
+
 		
-		if i==range_[0]:
-			print("nozoli: " ,count,self.value)
-			value+=self.value
-		elif i==range_[1]:
-			print("soudi:  ",count,self.value)
-			value+=self.value
-		elif i==range_[2]:
-			print("amoodi: ",count,self.value)
-			value+=self.value
-		else:
-			print("ofoghi: ",count,self.value)
-			value+=self.value	
+		value+=self.value
 
 		if count>=4:
 			self.value+=100
