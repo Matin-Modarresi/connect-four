@@ -1,9 +1,14 @@
 import copy
+import coordinates as cor
+import ctypes
+import os
+
 game_board = [['-' for i in range(7)]for j in range(7)]
 game_board_copy=copy.deepcopy(game_board)
 
 stop=0
 char=''
+
 
 def print2d(arr):
 	for i in arr:
@@ -13,10 +18,12 @@ class Node:
 	def __init__(self,map):
 
 		self.leaves=[]
+		self.rows=[]
 		self.value=0
 		self.map=map
 		self.row=0
 		self.col=0
+
 		self.nozoli=0
 		self.soudi=0
 		self.ofoghi=0
@@ -31,6 +38,11 @@ class Node:
 	def printTree(self):
 		for i in self.leaves:
 			if i.map:
+				print("nozoli:" , i.nozoli)
+				print("soudi: " , i.soudi)
+				print("amoodi:" , i.amoodi)
+				print("ofoghi:" , i.ofoghi)
+				print(i.value)
 				print(i.row,i.col)
 				print2d(i.map)
 				print()
@@ -38,45 +50,28 @@ class Node:
 			
 
 
+last_level=0
 
 def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
-	
+	global last_level
 	stop = stop_condition(self,row,col)
-
+	
+	self.rows=rows
 	self.row=row
 	self.col=col
-	
-	print("nozoli:",self.nozoli)
-	print("soudi: ",self.soudi)
-	print("amoodi:",self.amoodi)
-	print("ofoghi:",self.ofoghi)
-	print(self.value)
 
-	print(self.row,self.col)
-	#print(count)
-	print2d(self.map)
-	print()
-	input(char)
+	
+
 
 	if stop==1: 
-		#print(self.value)
-		#print(self.row,self.col)
-		##print(count)
-		#print2d(self.map)
-		#print()
-		#input(char)
 		return 1
 
 	if stop==-1:
-		#print2d(self.map)
-		#print()
-		#input(char)
 		return -1
 	
 
 	if index==5:
-		#print2d(arr)
-		#print()
+		last_level+=1
 		return 0
 
 
@@ -103,8 +98,15 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		if ignore==1 or ignore==-1:
 			break;
 	
+	maximum = -1000000
+	for i in self.leaves:
+		if i.value > maximum:
+			maximum = i.value
 
-						
+	self.value+=maximum
+
+
+	
 
 
 
@@ -168,10 +170,12 @@ def stop_condition(self,row,col):
 		value+=self.value
 
 		if count>=4:
-			self.value+=100
+			
 			if check=='x':
+				self.value+=100
 				return 1
 			else:
+				self.value-=100
 				return -1
 
 	self.value=value
@@ -191,15 +195,22 @@ def conditions(self,row,col,count,check,check_):
 
 	if self.map[row][col]=='-':
 		if not check_:
-				check_=True
+			check_=True
+			if check=='x':
 				self.value += count+.5
-		else: self.value+=.5
+			else:
+				self.value+= count-.5
+
+		else:
+			if check=='x':
+				self.value+= .5
+			else:
+				self.value-=.5
+
+
 
 
 	if self.map[row][col]=='x':
-
-		#if check=='x' and check_:
-
 
 		if check==None or check=='x':
 			if check_:
@@ -208,19 +219,19 @@ def conditions(self,row,col,count,check,check_):
 				count+=1
 				check='x'
 
-
 		if check=='o':
 			return False,count,check,check_
 
+	
+	
 	if self.map[row][col]=='o':
 
 		if check==None or check=='o':
 			if check_:
-				self.value+=1
+				self.value-=1
 			else:
-				count+=1
+				count-=1
 				check='o'
-
 
 		if check=='x':
 			return False,count,check,check_
@@ -228,11 +239,67 @@ def conditions(self,row,col,count,check,check_):
 	return True,count,check,check_
 
 
+
+
+	
+	
+column=None
+
+#INIT_POS=COORD(12,12)
+
+turn = 0
 tree=Node(game_board_copy)
 MAX(tree)
-#tree.printTree()
+rows=[]
+
+while True:
+	
+
+	for i in range(5):
+		
+		maximum=-1000000
+		index=0
+	
+		print("select a column:")
+		if i%2==0:
+			for i in tree.leaves:
+				if i.value>maximum:
+					maximum=i.value
+					index_max=index
+				index+=1
+					
+			
+			print(index_max)
+			print(tree.row,tree.col)
+			print(*tree.leaves[index_max].rows)
+			print2d(tree.leaves[index_max].map)
+	
+			tree=tree.leaves[index_max]
+			cor.gotoxy(0,17)
+			column=int(input())
+	
+		else:
+			#cor.gotoxy(17,0)
+			
+			if 0 <= column < len(tree.leaves) and  tree.rows[column] is not -1:
+					print2d(tree.leaves[column].map)
+					print()
+					tree=tree.leaves[column]
+			else:
+				print("please enter again")
+			
+		os.system("cls")
+
+	#game_board_copy=copy.deepcopy(tree.map)
+	#rows=tree.rows
+	#tree=Node(game_board_copy)
+	#MAX(tree,0,rows)
+	
+	
+	
+
+	
 
 
 
-#print2d(game_board)
 
