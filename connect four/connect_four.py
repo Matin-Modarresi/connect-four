@@ -51,17 +51,15 @@ class Node:
 
 
 last_level=0
+stop_turn=5
 
 def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
-	global last_level
+	global last_level,stop_turn
 	stop = stop_condition(self,row,col)
 	
 	self.rows=rows
 	self.row=row
 	self.col=col
-
-	
-
 
 	if stop==1: 
 		return 1
@@ -70,7 +68,7 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		return -1
 	
 
-	if index==5:
+	if index==stop_turn:
 		last_level+=1
 		return 0
 
@@ -250,12 +248,14 @@ column=None
 turn = 0
 tree=Node(game_board_copy)
 MAX(tree)
-rows=[]
+rows=[6,6,6,6,6,6,6]
 
 while True:
 	
+	tree=Node(game_board_copy)
+	MAX(tree,turn,rows)
 
-	for i in range(5):
+	for i in range(turn,stop_turn):
 		
 		maximum=-1000000
 		index=0
@@ -267,13 +267,40 @@ while True:
 					maximum=i.value
 					index_max=index
 				index+=1
-					
+			
+
 			
 			print(index_max)
 			print(tree.row,tree.col)
 			print(*tree.leaves[index_max].rows)
 			print2d(tree.leaves[index_max].map)
+
+			print()
 	
+			for j in tree.leaves:
+				print(j.value,end='\t\t')
+
+			print()
+
+			for i in range(7):
+				for j in tree.leaves:
+					print(*j.map[i],end='\t')
+				print()
+			
+			print()
+
+			for j in tree.leaves[index_max].leaves:
+				print(j.value,end='\t\t')
+
+			print()
+
+			for i in range(7):
+				for j in tree.leaves[index_max].leaves:
+					print(*j.map[i],end='\t')
+				print()
+
+			print()
+
 			tree=tree.leaves[index_max]
 			cor.gotoxy(0,17)
 			column=int(input())
@@ -287,13 +314,14 @@ while True:
 					tree=tree.leaves[column]
 			else:
 				print("please enter again")
+				char=input()
 			
 		os.system("cls")
 
-	#game_board_copy=copy.deepcopy(tree.map)
-	#rows=tree.rows
-	#tree=Node(game_board_copy)
-	#MAX(tree,0,rows)
+	game_board_copy=copy.deepcopy(tree.map)
+	rows=tree.rows
+	stop_turn+=1
+	turn+=1
 	
 	
 	
