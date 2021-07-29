@@ -23,11 +23,13 @@ class Node:
 		self.map=map
 		self.row=0
 		self.col=0
-
-		self.nozoli=0
-		self.soudi=0
-		self.ofoghi=0
-		self.amoodi=0
+		self.status = False
+		
+		self.detail_val ={ 'nozoli':0 , 'soudi':0, 'ofoghi':0 , 'amoodi':0}
+		#self.nozoli=0
+		#self.soudi=0
+		#self.ofoghi=0
+		#self.amoodi=0
 
 	def insert(self,map):
 		if self.map:
@@ -50,8 +52,8 @@ class Node:
 			
 
 
-last_level=0
-stop_turn=5
+
+
 
 def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	global last_level,stop_turn
@@ -62,9 +64,11 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 	self.col=col
 
 	if stop==1: 
+		self.value/=index
 		return 1
 
 	if stop==-1:
+		#self.value*=index
 		return -1
 	
 
@@ -96,12 +100,12 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		if ignore==1 or ignore==-1:
 			break;
 	
-	maximum = -1000000
-	for i in self.leaves:
-		if i.value > maximum:
-			maximum = i.value
-
-	self.value+=maximum
+	#maximum = -1000000
+	#for i in self.leaves:
+	#	if i.value > maximum:
+	#		maximum = i.value
+	#
+	#self.value+=maximum
 
 
 	
@@ -134,11 +138,11 @@ def stop_condition(self,row,col):
 						break
 
 				if i==range_[0]:
-					self.nozoli=self.value
+					self.detail_val['nozoli']=self.value
 
 					
 				else:
-					self.soudi=self.value
+					self.detail_val['soudi'] =self.value
 			
 					
 
@@ -149,7 +153,7 @@ def stop_condition(self,row,col):
 					if not condition:
 						break
 
-				self.amoodi=self.value
+				self.detail_val['amoodi'] =self.value
 	
 				
 
@@ -160,20 +164,22 @@ def stop_condition(self,row,col):
 					if not condition:
 						break
 
-				self.ofoghi=self.value
+				self.detail_val['ofoghi'] =self.value
 				
 				
 
 		
 		value+=self.value
 
+		global turn
+
 		if count>=4:
 			
 			if check=='x':
-				self.value+=100
+				self.value+=1000
 				return 1
 			else:
-				self.value-=100
+				self.value-=1000
 				return -1
 
 	self.value=value
@@ -243,9 +249,10 @@ def conditions(self,row,col,count,check,check_):
 	
 column=None
 
-#INIT_POS=COORD(12,12)
-
+last_level=0
 turn = 0
+stop_turn=5
+
 tree=Node(game_board_copy)
 MAX(tree)
 rows=[6,6,6,6,6,6,6]
@@ -271,6 +278,7 @@ while True:
 
 			
 			print(index_max)
+			
 			print(tree.row,tree.col)
 			print(*tree.leaves[index_max].rows)
 			print2d(tree.leaves[index_max].map)
@@ -278,9 +286,15 @@ while True:
 			print()
 	
 			for j in tree.leaves:
-				print(j.value,end='\t\t')
+				print(round(j.value,2),end='\t\t')
 
 			print()
+
+			for i in tree.leaves[index_max].detail_val:
+				for j in tree.leaves:
+					print(f"{i:<6}",j.detail_val[i],end='\t')
+				print()
+
 
 			for i in range(7):
 				for j in tree.leaves:
@@ -290,7 +304,7 @@ while True:
 			print()
 
 			for j in tree.leaves[index_max].leaves:
-				print(j.value,end='\t\t')
+				print(round(j.value,2),end='\t\t')
 
 			print()
 
@@ -320,14 +334,8 @@ while True:
 
 	game_board_copy=copy.deepcopy(tree.map)
 	rows=tree.rows
-	stop_turn+=1
-	turn+=1
+	turn=stop_turn
+	stop_turn+=5
 	
 	
 	
-
-	
-
-
-
-
