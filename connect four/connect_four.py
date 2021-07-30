@@ -37,18 +37,25 @@ class Node:
 		else:
 			self.map=map
 
-	def printTree(self):
-		for i in self.leaves:
-			if i.map:
-				print("nozoli:" , i.nozoli)
-				print("soudi: " , i.soudi)
-				print("amoodi:" , i.amoodi)
-				print("ofoghi:" , i.ofoghi)
-				print(i.value)
-				print(i.row,i.col)
-				print2d(i.map)
-				print()
-				i.printTree()
+
+	def printTree_bfs(self):
+
+		for j in self.leaves:
+			print(round(j.value,2),end='\t\t')
+
+		print()
+
+		for i in self.detail_val:
+			for j in self.leaves:
+				print(f"{i:<6}",j.detail_val[i],end='\t')
+			print()
+
+
+		for i in range(7):
+			for j in self.leaves:
+				print(*j.map[i],end='\t')
+			print()
+		
 			
 
 
@@ -100,12 +107,12 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		if ignore==1 or ignore==-1:
 			break;
 	
-	#maximum = -1000000
-	#for i in self.leaves:
-	#	if i.value > maximum:
-	#		maximum = i.value
-	#
-	#self.value+=maximum
+	maximum = -1000000
+	for i in self.leaves:
+		if i.value > maximum:
+			maximum = i.value
+	
+	self.value+=maximum
 
 
 	
@@ -174,13 +181,12 @@ def stop_condition(self,row,col):
 		global turn
 
 		if count>=4:
-			
-			if check=='x':
-				self.value+=1000
-				return 1
-			else:
-				self.value-=1000
-				return -1
+			self.value+=1000
+			return 1
+
+		if count<=-4:
+			self.value-=1000
+			return -1
 
 	self.value=value
 	return 0
@@ -200,16 +206,11 @@ def conditions(self,row,col,count,check,check_):
 	if self.map[row][col]=='-':
 		if not check_:
 			check_=True
-			if check=='x':
-				self.value += count+.5
-			else:
-				self.value+= count-.5
-
+		if check=='x':
+			self.value += .5
 		else:
-			if check=='x':
-				self.value+= .5
-			else:
-				self.value-=.5
+			self.value-=.5
+
 
 
 
@@ -221,6 +222,7 @@ def conditions(self,row,col,count,check,check_):
 				self.value+=1
 			else:
 				count+=1
+				self.value+=1
 				check='x'
 
 		if check=='o':
@@ -235,6 +237,7 @@ def conditions(self,row,col,count,check,check_):
 				self.value-=1
 			else:
 				count-=1
+				self.value-=1
 				check='o'
 
 		if check=='x':
@@ -285,38 +288,18 @@ while True:
 
 			print()
 	
-			for j in tree.leaves:
-				print(round(j.value,2),end='\t\t')
-
-			print()
-
-			for i in tree.leaves[index_max].detail_val:
-				for j in tree.leaves:
-					print(f"{i:<6}",j.detail_val[i],end='\t')
-				print()
-
-
-			for i in range(7):
-				for j in tree.leaves:
-					print(*j.map[i],end='\t')
-				print()
+			tree.printTree_bfs()
 			
 			print()
 
-			for j in tree.leaves[index_max].leaves:
-				print(round(j.value,2),end='\t\t')
-
-			print()
-
-			for i in range(7):
-				for j in tree.leaves[index_max].leaves:
-					print(*j.map[i],end='\t')
-				print()
+			tree.leaves[index_max].printTree_bfs()
 
 			print()
 
 			tree=tree.leaves[index_max]
+
 			cor.gotoxy(0,17)
+
 			column=int(input())
 	
 		else:
