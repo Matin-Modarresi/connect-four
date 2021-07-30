@@ -23,13 +23,10 @@ class Node:
 		self.map=map
 		self.row=0
 		self.col=0
-		self.status = False
+		self.status = 0
 		
 		self.detail_val ={ 'nozoli':0 , 'soudi':0, 'ofoghi':0 , 'amoodi':0}
-		#self.nozoli=0
-		#self.soudi=0
-		#self.ofoghi=0
-		#self.amoodi=0
+
 
 	def insert(self,map):
 		if self.map:
@@ -75,7 +72,7 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		return 1
 
 	if stop==-1:
-		#self.value*=index
+		self.value/=index
 		return -1
 	
 
@@ -104,15 +101,25 @@ def MAX(self,index=0,rows=[6,6,6,6,6,6,6],row=0,col=0):
 		self.leaves.append(Node(map_copy))
 		ignore=MAX(self.leaves[-1],index+1,rows_copy,rows_copy[j]+1,j)
 		
-		if ignore==1 or ignore==-1:
-			break;
+		#if ignore==1 or ignore==-1:
+		#	break;
 	
-	maximum = -1000000
-	for i in self.leaves:
-		if i.value > maximum:
-			maximum = i.value
-	
-	self.value+=maximum
+	if index%2==0:
+		maximum = -1000000
+		for i in self.leaves:
+			if i.value > maximum:
+				maximum = i.value
+		
+		self.value+=maximum
+
+	else:
+		minimum = 1000000
+		for i in self.leaves:
+			if i.value < minimum:
+				minimum=i.value
+
+		self.value+=minimum
+
 
 
 	
@@ -181,10 +188,12 @@ def stop_condition(self,row,col):
 		global turn
 
 		if count>=4:
+			self.status = 1
 			self.value+=1000
 			return 1
 
 		if count<=-4:
+			self.status =-1
 			self.value-=1000
 			return -1
 
@@ -256,16 +265,19 @@ last_level=0
 turn = 0
 stop_turn=5
 
+game_finished = False
+
 tree=Node(game_board_copy)
 MAX(tree)
 rows=[6,6,6,6,6,6,6]
 
-while True:
+while not game_finished:
 	
 	tree=Node(game_board_copy)
 	MAX(tree,turn,rows)
 
 	for i in range(turn,stop_turn):
+
 		
 		maximum=-1000000
 		index=0
@@ -295,6 +307,11 @@ while True:
 			tree.leaves[index_max].printTree_bfs()
 
 			print()
+		
+			if tree.leaves[index_max].status==1:
+				print("you lose")
+				game_finished = True
+				break
 
 			tree=tree.leaves[index_max]
 
@@ -303,11 +320,15 @@ while True:
 			column=int(input())
 	
 		else:
-			#cor.gotoxy(17,0)
 			
 			if 0 <= column < len(tree.leaves) and  tree.rows[column] is not -1:
-					print2d(tree.leaves[column].map)
+	
+					if tree.leaves[column].status == -1:
+						print('you win')
+						game_finished = True
+						break
 					print()
+
 					tree=tree.leaves[column]
 			else:
 				print("please enter again")
