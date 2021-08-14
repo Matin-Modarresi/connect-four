@@ -66,7 +66,7 @@ class Node:
 				if j==None:
 					if i==2:
 						print(f"{'None':^14}",end='  ')
-						file.write(f"{'None':^14}",end='  ')
+						file.write(f"{'None':^14}"+'  ')
 					else:
 						print(' '*16,end='')
 						file.write(' '*16)
@@ -299,7 +299,7 @@ column=None
 
 last_level=0
 turn = 0
-stop_turn=6
+stop_turn=5
 
 game_finished = False
 
@@ -314,93 +314,90 @@ while not game_finished:
 	MAX(tree,turn,rows)
 
 
-	for shift in range(turn,stop_turn):
+	#for shift in range(turn,stop_turn):
 
 
 
-		if shift%2==0:	
-			maximum=-1000000
+	if turn%2==0:	
+		maximum=-1000000
+		
+		for i,index in zip(tree.leaves,range(len(tree.leaves))):
+			if i==None:
+				continue
+			if i.value>maximum:
+				maximum=i.value
+				index_max=index
 			
-			for i,index in zip(tree.leaves,range(len(tree.leaves))):
-				if i==None:
-					continue
-				if i.value>maximum:
-					maximum=i.value
-					index_max=index
-				
-			
-			process = open('Process.txt','a',buffering=1)
-			
-			process.write('index_max '+str(index_max)+'\n')
-			process.write(str(tree.row)+ ' ' +str(tree.col)+'\n')
+		
+		process = open('Process.txt','a',buffering=1)
+		
+		process.write('index_max '+str(index_max)+'\n')
+		process.write(str(tree.row)+ ' ' +str(tree.col)+'\n')
 
-			for i in tree.leaves[index_max].rows:
-				process.write(str(i)+' ')
+		for i in tree.leaves[index_max].rows:
+			process.write(str(i)+' ')
 
+		process.write('\n')
+
+		for i in tree.leaves[index_max].map:
+			for j in i:
+				process.write(str(j)+' ')
 			process.write('\n')
 
-			for i in tree.leaves[index_max].map:
-				for j in i:
-					process.write(str(j)+' ')
-				process.write('\n')
+		process.write('\n')
+		
+		print()
+		print(index_max)
+		
+		print(tree.row,tree.col)
+		print(*tree.leaves[index_max].rows)
+		print2d(tree.leaves[index_max].map)
 
-			process.write('\n')
-			
-			print()
-			print(index_max)
-			
-			print(tree.row,tree.col)
-			print(*tree.leaves[index_max].rows)
-			print2d(tree.leaves[index_max].map)
+		if tree.leaves[index_max].status==1:
+			print("you lose")
+			game_finished = True
+			break
 
-			if tree.leaves[index_max].status==1:
-				print("you lose")
-				game_finished = True
+		print()
+		process.write('\n')
+
+		tree.printTree_bfs(process)
+		
+		print()
+
+		process.write('\n')
+
+		tree.leaves[index_max].printTree_bfs(process)
+
+		process.write('\n'+'#'*165+'\n')
+
+		print()
+		
+		tree=tree.leaves[index_max]
+
+	else:
+		cor.gotoxy(0,0)
+		print('select a column: ',end='')
+
+		while True:
+			column=int(input())
+			if 0 <= column < len(tree.leaves) and tree.rows[column] is not -1:
 				break
 
-			print()
-			process.write('\n')
+			else:
+				cor.gotoxy(0,0)
+				print('Invalid Input Please Enter Again: ',end='')
+		
+		os.system('cls')
 
-			tree.printTree_bfs(process)
-			
-			print()
+		if tree.leaves[column].status == -1:
+			print('you win')
+			game_finished = True
+			break
 
-			process.write('\n')
-
-			tree.leaves[index_max].printTree_bfs(process)
-
-			process.write('\n'+'#'*165+'\n')
-
-			print()
-			
-			tree=tree.leaves[index_max]
-
-		else:
-			cor.gotoxy(0,0)
-			print('select a column: ',end='')
-
-			while True:
-				column=int(input())
-				if 0 <= column < len(tree.leaves) and tree.rows[column] is not -1:
-					break
-
-				else:
-					cor.gotoxy(0,0)
-					print('Invalid Input Please Enter Again: ',end='')
-			
-			os.system('cls')
-
-			if tree.leaves[column].status == -1:
-				print('you win')
-				game_finished = True
-				break
-
-			tree=tree.leaves[column]
-	
-			
-
+		tree=tree.leaves[column]		
 
 	game_board_copy=copy.deepcopy(tree.map)
 	rows=tree.rows
-	turn=stop_turn
-	stop_turn+=6
+	turn+=1
+	stop_turn=4+turn
