@@ -64,8 +64,12 @@ class Node:
 		for i in range(7):
 			for j in self.leaves:
 				if j==None:
-					print(' '*16,end='')
-					file.write(' '*16)
+					if i==2:
+						print(f"{'None':^14}",end='  ')
+						file.write(f"{'None':^14}",end='  ')
+					else:
+						print(' '*16,end='')
+						file.write(' '*16)
 					continue
 
 				print(*j.map[i],end='\t')
