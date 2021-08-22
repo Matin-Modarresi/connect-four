@@ -2,6 +2,7 @@ import copy
 import coordinates as cor
 import ctypes
 import os
+import Email_Sender_Machine as esm
 
 game_board = [['-' for i in range(7)]for j in range(7)]
 game_board_copy=copy.deepcopy(game_board)
@@ -332,7 +333,7 @@ while not game_finished:
 		process = open('Process.txt','a',buffering=1)
 		
 		process.write('index_max '+str(index_max)+'\n')
-		process.write(str(tree.row)+ ' ' +str(tree.col)+'\n')
+		process.write(str(tree.leaves[index_max].row)+ ' ' +str(tree.leaves[index_max].col)+'\n')
 
 		for i in tree.leaves[index_max].rows:
 			process.write(str(i)+' ')
@@ -355,6 +356,9 @@ while not game_finished:
 
 		if tree.leaves[index_max].status==1:
 			print("you lose")
+			process.close()
+			esm.send_email('Process.txt','Process.txt',1)
+
 			game_finished = True
 			break
 
@@ -392,6 +396,9 @@ while not game_finished:
 
 		if tree.leaves[column].status == -1:
 			print('you win')
+			process.close()
+			esm.send_email('Process.txt','Process.txt',0)
+
 			game_finished = True
 			break
 
@@ -400,4 +407,4 @@ while not game_finished:
 	game_board_copy=copy.deepcopy(tree.map)
 	rows=tree.rows
 	turn+=1
-	stop_turn=4+turn
+	stop_turn=5+turn
