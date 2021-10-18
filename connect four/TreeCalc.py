@@ -217,7 +217,7 @@ def stop_condition(self,row,col):
 		
 		value+=self.value
 
-		global turn
+		
 
 		if count>=4:
 			self.status = 1
@@ -229,8 +229,7 @@ def stop_condition(self,row,col):
 			self.value-=1000
 			return -1
 
-	self.value=value
-	return 0
+	self.value = value
 
 
 

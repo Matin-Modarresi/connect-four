@@ -6,7 +6,7 @@ init(convert=1)
 PI=math.pi
 pygame.init()
 
-
+start = False
 
 class game_board:
 
@@ -51,16 +51,9 @@ class game_board:
 		
 		
 		
-		for i in range(self.row):
-			for j in range(self.col):
-				print('(',round(self.squares[i][j][0],2), round(self.squares[i][j][1],2), ')' , end=' ')
-			print()
 				
 		self.check_squares = False
 
-		print(Fore.RED+str(self.col_space))
-		print(self.row_space)
-		print(Fore.WHITE)
 		
 		
 
@@ -82,7 +75,7 @@ class game_board:
 				
 
 	def col_transparency(self,win):
-
+		global start , col_continue
 		for i,col in zip(self.squares[0],range(self.col)):
 			if i[0] < pygame.mouse.get_pos()[0] < i[0]+self.col_space[0] and i[1]< pygame.mouse.get_pos()[1]< i[1]+self.rectTransH :
 				if self.recTrans[col].get_alpha() != 50 :
@@ -90,11 +83,12 @@ class game_board:
 					self.circle(win)
 					self.recTrans[col].fill((255,255,255))
 					self.recTrans[col].set_alpha(50)
-					self.check_trans[col]=True
+					#self.check_trans[col]=True
 					win.blit(self.recTrans[col],(i[0],i[1]))
 					
 					
 				if pygame.mouse.get_pressed()[0] and self.last_bead[col]!=self.row:
+					start = True
 					self.draw_board(win)
 					self.circle(win)
 					self.recTrans[col].set_alpha(80)
@@ -102,22 +96,14 @@ class game_board:
 					win.blit(self.recTrans[col],(i[0],i[1]))
 					self.selected_col = col
 					
-					
-
-
 			else:
-				if self.check_trans[col]:
-					self.draw_board(win)
-					self.circle(win)
-					self.check_trans[col]=False
-					self.recTrans[col].set_alpha(0)
+				for i in self.recTrans:
+					i.set_alpha(80)
 				
-				
-
 
 		
 
-		#print(rectTransH,self.length)
+
 
 
 	def draw_board(self,window):
@@ -132,7 +118,7 @@ class game_board:
 		z = 0
 		if self.last_bead[self.selected_col]==self.row-1:
 			z=1
-			print(Fore.GREEN+ str(self.last_bead[self.selected_col]))
+			
 			
 		for fir_col,sec_col in zip(self.squares,self.squares[1-z:self.row-self.last_bead[self.selected_col]]):
 			for j in range(-int(self.row_space[1]),int(self.row_space[0]),4):
@@ -178,28 +164,9 @@ class game_board:
 					sys.exit()
 		
 
-				
 
-		
-
-
-class game_player():
-
-	def __init__(self , color,board):
-		self.color = color
-
-
-
-	def set_col(self, col):
-		self.x_bead = game_board.squares[0][game_board.selected_col][0]
-		self.y_bead = 0
-		s = pygame.Surface((game_board.col_space[0],game_board.row_space[0]))  # the size of your rect
-
-		
-		s.fill((255,0,255))           
-		pygame.draw.rect(s,(255,255,255),(0,0,game_board.col_space[0],game_board.row_space[0]),border_radius=100)
-		win.blit(s,(self.x_bead,self.y_bead))
-		self.y_bead+=10
-		
-		
-	
+def exit_from_game():
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+			pygame.quit()
+			sys.exit()
